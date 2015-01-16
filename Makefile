@@ -1,7 +1,9 @@
 #declare variable
 
-CC=g++
-CFLAGS=-Wall
+CC = g++
+CFLAGS = -O3 -Wall
+
+#LDFLAGS =
 
 LIB_DIR = lib
 LIB_OBJ = lib/librgbmatrix.a

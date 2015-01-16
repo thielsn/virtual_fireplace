@@ -23,8 +23,8 @@ using namespace std;
 #define DURATION 2000
 
 
-static int counter = 0;
-static double step = 2 * M_PI / WIDTH;
+static int counter = 1;
+static double step = 2 * M_PI / (WIDTH-1);
 
 static float randomfloat(float low, float high) {
 
@@ -67,10 +67,22 @@ static void DrawOnCanvas(Canvas *canvas) {
 
             for (int y = 0; y < HEIGHT; y++) {
 
-                int val2 = ((sin(counter * seed3 + y * step + M_PI / 4) + 1) / 2.0) * 126
+                int green = 0.4 * ((sin(counter * seed3 + y * step + M_PI / 4) + 1) / 2.0) * 126
                     + ((sin(counter * seed4 + y * step * seed6) + 1) / 2.0) * 126;
-
-                canvas->SetPixel(x, y, red, val2, (int)(val2*0.5));
+                
+                int blue = 0;
+                if (red<=0){
+                    red=1;
+                    green=250;
+                    blue=254;
+                }
+                if (green<=0){
+                    green=1;
+                    green=250;
+                    blue=254;
+                }
+                
+                canvas->SetPixel(x, y, red, green, blue);
             }
         }
 

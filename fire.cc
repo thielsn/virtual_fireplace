@@ -74,15 +74,11 @@ static void DrawOnCanvas(Canvas *canvas) {
                 if (red>255){
                     red=255;
                 }
-                if (red<=0){
-                    red=250;
-                    green=255;
-                    blue=2;
+                if (red<=2){
+                    red=2;                    
                 }
-                if (green<=0){
-                    red=250;
-                    green=255;
-                    blue=2;
+                if (green<=2){                    
+                    green=2;                    
                 }
                 
                 canvas->SetPixel(x, y, red, green, blue);

@@ -13,7 +13,9 @@ LIB_OBJ = lib/librgbmatrix.a
 
 all: lib_code fire
 
-clean: clean_fire clean_lib
+dist-clean: clean_fire clean_lib
+
+clean: clean_fire
 	
 
 	

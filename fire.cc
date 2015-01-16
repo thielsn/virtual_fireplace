@@ -20,103 +20,86 @@ using namespace std;
 
 #define WIDTH 32
 #define HEIGHT 32
+#define DURATION 2000
 
 
 static int counter = 0;
-static double step = 2 * M_PI/WIDTH;
-static int lightMax = 155.0;
+static double step = 2 * M_PI / WIDTH;
 
+static float randomfloat(float low, float high) {
 
-static float randomfloat (float low, float high){
-
-  float result = low + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(high-low)));
-  return result;
+    float result = low + static_cast<float> (rand()) / (static_cast<float> (RAND_MAX / (high - low)));
+    return result;
 }
 
 static void DrawOnCanvas(Canvas *canvas) {
-  /*
-   * Let's create a simple animation. We use the canvas to draw
-   * pixels. We wait between each step to have a slower animation.
-   */
-  canvas->Fill(0, 0, 0);
+    /*
+     * Let's create a simple animation. We use the canvas to draw
+     * pixels. We wait between each step to have a slower animation.
+     */
+    canvas->Fill(0, 0, 0);
 
-  
+    int seed = static_cast<int> (time(0));
+    srand(seed);
 
-  /*int center_x = canvas->width() / 2;
-  int center_y = canvas->height() / 2;
-  float radius_max = canvas->width() / 2;
-  float angle_step = 1.0 / 360;
-  for (float a = 0, r = 0; r < radius_max; a += angle_step, r += angle_step) {
-    float dot_x = cos(a * 2 * M_PI) * r;
-    float dot_y = sin(a * 2 * M_PI) * r;
-    canvas->SetPixel(center_x + dot_x, center_y + dot_y,
-                     255, 0, 0);
-    usleep(1 * 1000);  // wait a little to slow down things.
-  }*/
-
-  int seed = static_cast<int>(time(0));
-  srand(seed);
-
-  float seed1 = randomfloat (-.04, .030);
-  float seed2 = randomfloat (-.04, .030);
-  float seed3 = randomfloat (-.04, .030);
-  float seed4 = randomfloat (-.04, .030);
-  float seed5 = randomfloat (0.2, 3);
-  float seed6 = randomfloat (0.2, 3);
-  
-
-  cout << "1: " << seed1 << endl;
-  cout << "2: " << seed2 << endl;
-  cout << "3: " << seed3 << endl;
-  cout << "4: " << seed4 << endl;
+    float seed1 = randomfloat(-.04, .030);
+    float seed2 = randomfloat(-.04, .030);
+    float seed3 = randomfloat(-.04, .030);
+    float seed4 = randomfloat(-.04, .030);
+    float seed5 = randomfloat(0.2, 3);
+    float seed6 = randomfloat(0.2, 3);
 
 
-  for (int i = 0; i < 20000; ++i){
-
-    for (int x = 0 ; x < WIDTH ; x++){
+    cout << "1: " << seed1 << endl;
+    cout << "2: " << seed2 << endl;
+    cout << "3: " << seed3 << endl;
+    cout << "4: " << seed4 << endl;
     
-      int val1 = ( (sin (counter*seed1 + x * step + M_PI/4) + 1) / 2.0 ) * 126;
-      int val2 = ( (sin (counter*seed2 + x * step*seed5) + 1) / 2.0 ) * 126;
+    
 
-      for (int y = 0 ; y < HEIGHT ; y++){
 
-        int val3 = ( (sin (counter*seed3 + y * step + M_PI/4) + 1) / 2.0 ) * 126;
-        int val4 = ( (sin (counter*seed4 + y * step*seed6) + 1) / 2.0 ) * 126;
+    for (int i = 0; i < DURATION; ++i) {
 
-        //int val5 = ( (sin ( counter*seed5 + y * step + x * step) + 1) / 2.0 ) * lightMax/3.0;
-        
-        canvas->SetPixel(x, y, val1+val2 + 50 , val3+val4 , 0);
-      }
-    } 
+        for (int x = 0; x < WIDTH; x++) {
 
-    counter ++;
-    usleep(1 * 1000);  // wait a little to slow down things. 
-  }
+            int red = 50 +((sin(counter * seed1 + x * step + M_PI / 4) + 1) / 2.0) * 126
+                    + ((sin(counter * seed2 + x * step * seed5) + 1) / 2.0) * 126;
+
+            for (int y = 0; y < HEIGHT; y++) {
+
+                int val2 = ((sin(counter * seed3 + y * step + M_PI / 4) + 1) / 2.0) * 126
+                    + ((sin(counter * seed4 + y * step * seed6) + 1) / 2.0) * 126;
+
+                canvas->SetPixel(x, y, red, val2, (int)(val2*0.5));
+            }
+        }
+
+        counter++;
+        usleep(1 * 1000); // wait a little to slow down things. 
+    }
 
 }
 
-
-
 int main(int argc, char *argv[]) {
-  /*
-   * Set up GPIO pins. This fails when not running as root.
-   */
-  GPIO io;
-  if (!io.Init())
-    return 1;
-    
-  /*
-   * Set up the RGBMatrix. It implements a 'Canvas' interface.
-   */
-  int rows = 32;   // A 32x32 display. Use 16 when this is a 16x32 display.
-  int chain = 1;   // Number of boards chained together.
-  Canvas *canvas = new RGBMatrix(&io, rows, chain);
+    /*
+     * Set up GPIO pins. This fails when not running as root.
+     */
+    GPIO io;
+    if (!io.Init())
+        return 1;
 
-  DrawOnCanvas(canvas);    // Using the canvas.
+    /*
+     * Set up the RGBMatrix. It implements a 'Canvas' interface.
+     */
+    int rows = 32; // A 32x32 display. Use 16 when this is a 16x32 display.
+    int chain = 1; // Number of boards chained together.
+    Canvas *canvas = new RGBMatrix(&io, rows, chain);
 
-  // Animation finished. Shut down the RGB matrix.
-  canvas->Clear();
-  delete canvas;
+    DrawOnCanvas(canvas); // Using the canvas.
 
-  return 0;
+    // Animation finished. Shut down the RGB matrix.
+    canvas->Clear();
+    delete canvas;
+
+    return 0;
 }

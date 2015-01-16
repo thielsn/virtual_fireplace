@@ -20,7 +20,7 @@ using namespace std;
 
 #define WIDTH 32
 #define HEIGHT 32
-#define DURATION 2000
+#define DURATION 20000
 
 
 static int counter = 1;
@@ -62,7 +62,7 @@ static void DrawOnCanvas(Canvas *canvas) {
 
         for (int x = 0; x < WIDTH; x++) {
 
-            int red = 50 +((sin(counter * seed1 + x * step + M_PI / 4) + 1) / 2.0) * 126
+            int red = 150 +((sin(counter * seed1 + x * step + M_PI / 4) + 1) / 2.0) * 126
                     + ((sin(counter * seed2 + x * step * seed5) + 1) / 2.0) * 126;
 
             for (int y = 0; y < HEIGHT; y++) {
@@ -70,16 +70,19 @@ static void DrawOnCanvas(Canvas *canvas) {
                 int green = 0.4 * ((sin(counter * seed3 + y * step + M_PI / 4) + 1) / 2.0) * 126
                     + ((sin(counter * seed4 + y * step * seed6) + 1) / 2.0) * 126;
                 
-                int blue = 0;
+                int blue = 2;
+                if (red>255){
+                    red=255;
+                }
                 if (red<=0){
-                    red=1;
-                    green=250;
-                    blue=254;
+                    red=250;
+                    green=255;
+                    blue=2;
                 }
                 if (green<=0){
-                    green=1;
-                    green=250;
-                    blue=254;
+                    red=250;
+                    green=255;
+                    blue=2;
                 }
                 
                 canvas->SetPixel(x, y, red, green, blue);
